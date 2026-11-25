@@ -19,9 +19,9 @@ load_dotenv()
 
 
 def _get_api_base_url() -> str:
-    fallback_url = os.getenv("API_BASE_URL", "http://localhost:8001")
+    fallback_url = os.getenv("API_BASE_URL", "http://localhost:8001").strip()
     try:
-        return st.secrets.get("API_BASE_URL", fallback_url).rstrip("/")
+        return st.secrets.get("API_BASE_URL", fallback_url).strip().rstrip("/")
     except StreamlitSecretNotFoundError:
         return fallback_url.rstrip("/")
 
