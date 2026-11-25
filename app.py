@@ -10,12 +10,23 @@ from typing import Any
 import requests
 import streamlit as st
 from dotenv import load_dotenv
+from streamlit.errors import StreamlitSecretNotFoundError
 
 from core.summarizer import PRESETS
 
 
 load_dotenv()
-API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8001").rstrip("/")
+
+
+def _get_api_base_url() -> str:
+    fallback_url = os.getenv("API_BASE_URL", "http://localhost:8001")
+    try:
+        return st.secrets.get("API_BASE_URL", fallback_url).rstrip("/")
+    except StreamlitSecretNotFoundError:
+        return fallback_url.rstrip("/")
+
+
+API_BASE_URL = _get_api_base_url()
 PRESET_OPTIONS = ["Consulta livre", *PRESETS.keys()]
 
 st.set_page_config(
