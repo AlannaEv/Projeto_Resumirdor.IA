@@ -76,9 +76,11 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="Resumo LLM API",
+    title="ResumeAI API",
     version="3.0.0",
     description="Extracao e analise streaming de documentos.",
+    docs_url="/docs",
+    openapi_url="/openapi.json",
     lifespan=lifespan,
 )
 
@@ -89,6 +91,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/")
+def read_root() -> dict[str, str]:
+    return {"status": "ok", "message": "ResumeAI API is online"}
 
 
 class AnalyzeRequest(BaseModel):
